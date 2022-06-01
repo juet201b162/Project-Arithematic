@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;  //make changes at appropriate places to include this dependency
 
@@ -26,6 +27,7 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
+    Toast toast;
     int matchCounter=0;
     int []performance={-1,-1,-1,-1,-1,-1}; //score of a game is updated in this array
     int []score={-1,-1,-1}; //score of each match is updated in this array. A total of three matches in a game
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
             score[matchCounter++]=0;
         }
+        toast.show();
         newMatch();
     }
     @Override
@@ -72,13 +75,51 @@ public class MainActivity extends AppCompatActivity {
     public void newMatch() {  //A game is composed of three matches
 
         int operand1 = random.nextInt(10);
-        int operand2=0;
+        int operand2 = random.nextInt(10);
+        int correctAns = -100;
+
         //check is operand2 is not zero; otherwise in case of division-divide by zero error will come
         String operator = operators[random.nextInt(4)];
         textView2.setText(operand1 + operator + operand2);
 
-      // Your code here, to diplay correct and incorrect options on the buttons
-
+        // Your code here, to diplay correct and incorrect options on the buttons
+        if(operator.equals("+")){
+            correctAns = operand1 + operand2;
+        }
+        else if(operator.equals("-")){
+            correctAns = operand1 - operand2;
+        }
+        else if(operator.equals("*")){
+            correctAns = operand1 * operand2;
+        }
+        else{
+            correctAns = operand1 / operand2;
+        }
+        correctButton = random.nextInt(4);
+        if(correctButton == 0){
+            button1.setText(correctAns+"");
+            button2.setText(correctAns - 1 + "");
+            button3.setText(correctAns + 1 + "");
+            button4.setText(correctAns + 2 + "");
+        }
+        else if(correctButton == 1){
+            button2.setText(correctAns+"");
+            button1.setText(correctAns - 1 + "");
+            button3.setText(correctAns + 1 + "");
+            button4.setText(correctAns + 2 + "");
+        }
+        else if(correctButton == 2){
+            button3.setText(correctAns+"");
+            button2.setText(correctAns - 1 + "");
+            button1.setText(correctAns + 1 + "");
+            button4.setText(correctAns + 2 + "");
+        }
+        else {
+            button4.setText(correctAns+"");
+            button2.setText(correctAns - 1 + "");
+            button3.setText(correctAns + 1 + "");
+            button1.setText(correctAns + 2 + "");
+        }
         if(matchCounter==3){    // if three matches are completed updatee the perfomrance in sharedpreferences
 
             matchCounter=0;
@@ -95,6 +136,9 @@ public class MainActivity extends AppCompatActivity {
     public int sumOfScore(){
         //Computing the sum of score array, which has the 1 or in each index,depending on correct or incorrect answers
         int sum=0;
+        for ( int i : score) {
+            sum += i;
+        }
        // your code here
         return sum;
     }
@@ -115,6 +159,17 @@ public class MainActivity extends AppCompatActivity {
     public String getInterpretation(int [][]dataFrame,double slope){
        //provide interpretation based on your slope analysis
         // Your code here
-        return "Your Interpretation";
+
+        if(slope > 0  && slope <= 0.5){
+            return "You are doing ok try harder";
+        }
+        else if(slope < 0 ){
+            return "You are doing bad";
+        }
+        else if(slope > 0.5){
+            return "You are doing great";
+        }
+
+        return "Interpretation idk";
     }
 }
