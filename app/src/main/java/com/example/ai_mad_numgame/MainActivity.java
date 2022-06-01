@@ -40,8 +40,10 @@ public class MainActivity extends AppCompatActivity {
         Button buttonClicked=(Button)view;
         if(buttonClicked.getTag().toString().equals(correctButton+"")){
             score[matchCounter++]=1;
+            toast = Toast.makeText(getApplicationContext(),"Correct",Toast. LENGTH_SHORT);
         }else{
             score[matchCounter++]=0;
+            toast = Toast.makeText(getApplicationContext(),"Incorrect",Toast. LENGTH_SHORT);
         }
         toast.show();
         newMatch();
